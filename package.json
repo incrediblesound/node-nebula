@@ -1,6 +1,6 @@
 {
   "name": "node_nebula",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node interface for NebulaDB",
   "main": "nebula.js",
   "scripts": {
