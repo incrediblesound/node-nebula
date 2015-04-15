@@ -50,6 +50,14 @@ nebula.query = function(query, cb){
 	request.end();
 }
 
+nebula.close = function(){
+	request_options.path = '/close';
+	request_options.headers['Content-Length'] = 0;
+	var request = http.request(request_options)
+	request.write(data);
+	request.end();
+}
+
 module.exports = nebula;
 
 function retrieveData(res, cb){
