@@ -14,6 +14,11 @@ var nebula = require('node_nebula');
 
 // calling open will initilialize a new db
 nebula.open({name:'testdb', isNew: true});
+
+// for doing multiple processes in a series, use a callback on open
+nebula.open({name:'testdb', isNew: true}, function(){
+  nebula.save(['john','->','user']);
+})
 ```
 Save data:
 ```javascript
