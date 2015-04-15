@@ -39,7 +39,7 @@ nebula.saveAll = function(query){
 
 nebula.query = function(query, cb){
 	var data = JSON.stringify(query);
-	request_options.path = '/save';
+	request_options.path = '/query';
 	request_options.headers['Content-Length'] = Buffer.byteLength(data);
 	var request = http.request(request_options, function(res){
 		retrieveData(res, function(data){
@@ -52,9 +52,9 @@ nebula.query = function(query, cb){
 
 nebula.close = function(){
 	request_options.path = '/close';
-	request_options.headers['Content-Length'] = 0;
-	var request = http.request(request_options)
-	request.write(data);
+	request_options.headers['Content-Length'] = 16;
+	var request = http.request(request_options);
+	request.write('{"close":"true"}');
 	request.end();
 }
 
