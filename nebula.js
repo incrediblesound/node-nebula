@@ -10,11 +10,13 @@ var request_options = {
 
 var nebula = {};
 
-nebula.open = function(options){
+nebula.open = function(options, cb){
 	var data = JSON.stringify(options);
 	request_options.path = '/init';
 	request_options.headers['Content-Length'] = Buffer.byteLength(data);
-	var request = http.request(request_options)
+	var request = http.request(request_options, function(){
+		cb();
+	});
 	request.write(data);
 	request.end();
 };
