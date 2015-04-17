@@ -11,6 +11,7 @@ var request_options = {
 var nebula = {};
 
 nebula.open = function(options, cb){
+	cb = cb || function(){};
 	var data = JSON.stringify(options);
 	request_options.path = '/init';
 	request_options.headers['Content-Length'] = Buffer.byteLength(data);
@@ -21,11 +22,14 @@ nebula.open = function(options, cb){
 	request.end();
 };
 
-nebula.save = function(query){
+nebula.save = function(query, cb){
+	cb = cb || function(){};
 	var data = JSON.stringify(query);
 	request_options.path = '/save';
 	request_options.headers['Content-Length'] = Buffer.byteLength(data);
-	var request = http.request(request_options)
+	var request = http.request(request_options, function(){
+		cb();
+	})
 	request.write(data);
 	request.end();
 }
@@ -45,6 +49,7 @@ nebula.query = function(query, cb){
 	request_options.headers['Content-Length'] = Buffer.byteLength(data);
 	var request = http.request(request_options, function(res){
 		retrieveData(res, function(data){
+			data = parseNebulaResult(data)
 			cb(data);
 		})
 	})
@@ -70,3 +75,27 @@ function retrieveData(res, cb){
     });
 }
 
+function parseNebulaResult(data){
+	if(!Array.isArray(data)){
+		return data;
+	}
+	var result = {};
+	forEach(data, function(item, idx){
+		if(!Array.isArray(item)){
+			result.simpleStates = result.simpleStates || [];
+			result.simpleStates.push(item);
+		} else {
+			if(result[item[0]] === undefined){
+				result[item[0]] = [];
+			}
+			result[item[0]] = result[item[0]].concat(item[1]);
+		}
+	})
+	return result;
+}
+
+function forEach(arr, fn){
+	for(var i = 0, l = arr.length; i < l; i++){
+		fn(arr[i], i);
+	}
+}
