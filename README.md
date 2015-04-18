@@ -12,11 +12,11 @@ Require:
 ```javascript
 var nebula = require('node_nebula');
 
-// calling open will initilialize a new db
-nebula.open({name:'testdb', isNew: true});
+// calling open will create a new database or open an existing one
+nebula.open({name:'testdb'});
 
-// for doing multiple processes in a series, use a callback on open
-nebula.open({name:'testdb', isNew: true}, function(){
+// the open method is async, so it can take a callback
+nebula.open({name:'testdb'}, function(){
   nebula.save(['john','->','user']);
 })
 ```
